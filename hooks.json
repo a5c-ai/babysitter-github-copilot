@@ -17,6 +17,30 @@
         "timeoutSec": 15
       }
     ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "./hooks/babysitter-proxied-pre-tool-use.sh",
+        "powershell": "./hooks/babysitter-proxied-pre-tool-use.ps1",
+        "timeoutSec": 30
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "./hooks/babysitter-proxied-post-tool-use.sh",
+        "powershell": "./hooks/babysitter-proxied-post-tool-use.ps1",
+        "timeoutSec": 30
+      }
+    ],
+    "PreCompact": [
+      {
+        "type": "command",
+        "bash": "./hooks/babysitter-proxied-pre-compact.sh",
+        "powershell": "./hooks/babysitter-proxied-pre-compact.ps1",
+        "timeoutSec": 30
+      }
+    ],
     "sessionEnd": [
       {
         "type": "command",
