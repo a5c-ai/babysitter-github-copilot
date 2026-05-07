@@ -1,7 +1,7 @@
 {
   "version": 1,
   "hooks": {
-    "sessionStart": [
+    "SessionStart": [
       {
         "type": "command",
         "bash": "./hooks/babysitter-proxied-session-start.sh",
@@ -17,7 +17,7 @@
         "timeoutSec": 15
       }
     ],
-    "sessionEnd": [
+    "SessionEnd": [
       {
         "type": "command",
         "bash": "./hooks/babysitter-proxied-session-end.sh",
