@@ -2,6 +2,7 @@
 $env:HOOK_TYPE = 'user-prompt-submit'
 $env:ADAPTER_NAME = 'copilot'
 $env:PLUGIN_ROOT = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$env:CLAUDE_PLUGIN_ROOT = $env:PLUGIN_ROOT
 
 $input_data = [Console]::In.ReadToEnd()
 $result = $input_data | & bash "$PSScriptRoot/../$($MyInvocation.MyCommand.Name -replace '\.ps1$','.sh')" 2>$null
