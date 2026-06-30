@@ -18,7 +18,8 @@ directly.
 - **Node.js 22+**
 - **GitHub Copilot CLI** (`copilot`) -- requires an active GitHub Copilot
   subscription
-- **Babysitter SDK CLI** (`@a5c-ai/babysitter-sdk`) -- installed globally
+- **Babysitter CLI** (`@a5c-ai/babysitter`) -- installed globally when using
+  the SDK helper
 
 ## Installation
 
@@ -28,7 +29,7 @@ Register the a5c.ai marketplace and install the plugin:
 
 ```bash
 # Register the marketplace
-copilot plugin marketplace add a5c-ai/babysitter
+copilot plugin marketplace add a5c-ai/babysitter-claude
 
 # Install the plugin
 copilot plugin install babysitter
@@ -36,42 +37,50 @@ copilot plugin install babysitter
 
 ### Direct GitHub install
 
-Install directly from the Git repository using Copilot CLI. Copilot CLI
-discovers the plugin via `.github/plugin/marketplace.json` at the repo root:
+Install directly from the generated external plugin repository:
 
 ```bash
-copilot plugin install a5c-ai/babysitter
+copilot plugin install a5c-ai/babysitter-github-copilot
 ```
 
-### Alternative Installation (npm / development)
+### Alternative Installation (SDK helper / development)
 
-For development or environments where the Copilot CLI plugin system is not
-available, install via npm:
+For development, automation, or environments where the Copilot CLI plugin system is not available, install through the Babysitter SDK helper. This is the canonical scriptable path used by the installer tests and resolves to `npx --yes @a5c-ai/babysitter-github install ...` under the hood:
 
-Install the SDK CLI first:
+Install the Babysitter CLI first:
 
 ```bash
-npm install -g @a5c-ai/babysitter-sdk
+npm install -g @a5c-ai/babysitter
 ```
 
-Then install the GitHub Copilot plugin globally:
+Then install the GitHub Copilot plugin globally or into a workspace:
 
 ```bash
-npm install -g @a5c-ai/babysitter-github
-babysitter-github install
+# Global install
+babysitter harness:install-plugin github-copilot
+
+# Workspace install
+babysitter harness:install-plugin github-copilot --workspace /path/to/repo
 ```
 
-Or install from source:
+You can also run the published package installer directly:
 
 ```bash
-cd plugins/babysitter-github
-node bin/install.js
+npx --yes @a5c-ai/babysitter-github install --global
+npx --yes @a5c-ai/babysitter-github install --workspace /path/to/repo
 ```
 
-Install into a specific workspace:
+Or install from generated source:
 
 ```bash
-babysitter-github install --workspace /path/to/repo
+npm run generate:plugins
+node artifacts/generated-plugins/github-copilot/bin/install.js
+```
+
+Install into a specific workspace from generated source:
+
+```bash
+node artifacts/generated-plugins/github-copilot/bin/install.js --workspace /path/to/repo
 ```
 
 ### GitHub Copilot cloud agent installation
@@ -253,8 +262,7 @@ Copilot CLI looks for the plugin manifest in these paths, checked in order:
 The first match wins. This plugin uses `plugin.json` at the package root.
 
 For marketplace discovery, Copilot CLI looks for `.github/plugin/marketplace.json`
-at the repository root. This file lists all available plugins in the repo and is
-used when installing via `copilot plugin install OWNER/REPO`.
+at the repository root of the generated plugin repository.
 
 ### plugin.json Schema
 
@@ -404,7 +412,7 @@ repository root in `.github/plugin/marketplace.json`:
       "name": "babysitter",
       "description": "Multi-step workflow orchestration with event-sourced state",
       "version": "0.1.0",
-      "source": "./plugins/babysitter-github"
+      "source": "./"
     }
   ]
 }
@@ -461,7 +469,7 @@ These registries are available without running `marketplace add`.
 ## Plugin Structure (Directory Layout)
 
 ```
-plugins/babysitter-github/
+artifacts/generated-plugins/github-copilot/
   plugin.json              # Plugin manifest (skills, hooks, metadata)
   .github/plugin.json      # Plugin manifest (alternate discovery path)
   hooks.json               # Hook configuration (sessionStart, sessionEnd, userPromptSubmitted)
@@ -579,14 +587,14 @@ compatibility where PowerShell execution is available.
 git clone https://github.com/a5c-ai/babysitter.git
 cd babysitter
 npm install
-cd plugins/babysitter-github
+npm run generate:plugins
 node bin/install.js
 ```
 
 ### Publishing
 
 ```bash
-cd plugins/babysitter-github
+cd artifacts/generated-plugins/github-copilot
 npm run deploy            # Publish to npm (public)
 npm run deploy:staging    # Publish to npm with staging tag
 ```
@@ -594,7 +602,7 @@ npm run deploy:staging    # Publish to npm with staging tag
 ### Team installation
 
 ```bash
-cd plugins/babysitter-github
+cd artifacts/generated-plugins/github-copilot
 npm run team:install
 ```
 
